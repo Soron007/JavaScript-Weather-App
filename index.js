@@ -4,8 +4,8 @@ const cityField = document.querySelector(".weather2 p");
 const dateField = document.querySelector(".weather2 span");
 const emojiField = document.querySelector(".weather3 img");
 const weatherField = document.querySelector(".weather3 span");
-// const searchField = document.querySelector(".search");
-// const form = document.querySelector("form");
+const searchField = document.querySelector(".search");
+const form = document.querySelector("form");
 
 
 
@@ -15,22 +15,30 @@ let target = "delhi";
 // Function to fetch Data from Weather API
 const fetchData = async (target) => {
 
-    const url = `https://api.weatherapi.com/v1/current.json?key=5b27a6ef3547402582e62007222306&q=${target}`;
+    try {
+        const url = `https://api.weatherapi.com/v1/current.json?key=5b27a6ef3547402582e62007222306&q=${target}`;
 
-    const response = await fetch(url);
-    const data = await response.json();
+        const response = await fetch(url);
+        const data = await response.json();
 
-    // Destructuring
-    const {
-        current: {
-            temp_c,
-            condition: { text, icon },
-        },
-        location: { name, localtime },
-    } = data;
+        // Destructuring
+        const {
+            current: {
+                temp_c,
+                condition: { text, icon },
+            },
+            location: { name, localtime },
+        } = data;
 
-    // Calling update Dom Function
-    updateDom(temp_c, name, localtime, icon, text);
+        // Calling update Dom Function
+
+        updateDom(temp_c, name, localtime, icon, text);
+    } catch (error) {
+        alert('Location not found');
+    }
+
+
+
 
 
 };
@@ -74,9 +82,19 @@ function getDayFullName(num) {
             return "Friday";
 
         case 6:
-            return "Saturdat";
+            return "Saturday";
 
         default:
             return "Don't Know";
     }
 }
+
+
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    target = searchField.value;
+
+    fetchData(target);
+})
